@@ -1,0 +1,6 @@
+﻿services:
+  fontech.api:
+    image: fontech.api
+    build:
+      context: .
+      dockerfile: FonTech.Api/Dockerfile
