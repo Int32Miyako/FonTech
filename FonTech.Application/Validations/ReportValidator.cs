@@ -8,7 +8,7 @@ namespace FonTech.Application.Validations;
 
 public class ReportValidator: IReportValidator
 {
-    public BaseResult ValidateOnNull(Domain.Entity.Report? report)
+    public BaseResult ValidateOnNull(Report? report)
     {
         if (report == null)
         {
@@ -22,7 +22,7 @@ public class ReportValidator: IReportValidator
         return new BaseResult();
     }
 
-    public BaseResult CreateValidator(Domain.Entity.Report? report, User? user)
+    public BaseResult CreateValidator(Report? report, User? user)
     {
         if (report != null)
         {

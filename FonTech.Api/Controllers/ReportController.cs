@@ -27,7 +27,6 @@ public class ReportController : ControllerBase
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [Authorize]
     [HttpGet("byOwnId/{id:long}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -33,4 +33,28 @@
     <data name="UserNotFound" xml:space="preserve">
         <value>Пользователь не найден</value>
     </data>
+    <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
+        <value>Пароли не совпадают</value>
+    </data>
+    <data name="UserAlreadyExists" xml:space="preserve">
+        <value>Пользователь уже существует</value>
+    </data>
+    <data name="WrongPassword" xml:space="preserve">
+        <value>Не верный пароль</value>
+    </data>
+    <data name="InvalidSecurityToken" xml:space="preserve">
+        <value>Невалидный токен</value>
+    </data>
+    <data name="InvalidClientRequest" xml:space="preserve">
+        <value>Невалидный запрос клиента</value>
+    </data>
+    <data name="RoleAlreadyExists" xml:space="preserve">
+        <value>Такая роль уже существует</value>
+    </data>
+    <data name="RoleNotFound" xml:space="preserve">
+        <value>Роль не найдена</value>
+    </data>
+    <data name="UserAlreadyExistsThisRole" xml:space="preserve">
+        <value>У выбранного пользователя уже есть эта роль</value>
+    </data>
 </root>

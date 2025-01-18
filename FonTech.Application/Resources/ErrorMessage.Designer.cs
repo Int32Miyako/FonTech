@@ -69,6 +69,33 @@ namespace FonTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Невалидный запрос клиента.
+        /// </summary>
+        internal static string InvalidClientRequest {
+            get {
+                return ResourceManager.GetString("InvalidClientRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Невалидный токен.
+        /// </summary>
+        internal static string InvalidSecurityToken {
+            get {
+                return ResourceManager.GetString("InvalidSecurityToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пароли не совпадают.
+        /// </summary>
+        internal static string PasswordNotEqualsPasswordConfirm {
+            get {
+                return ResourceManager.GetString("PasswordNotEqualsPasswordConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Отчет с таким названием уже есть.
         /// </summary>
         internal static string ReportAlreadyExists {
@@ -96,11 +123,56 @@ namespace FonTech.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Такая роль уже существует.
+        /// </summary>
+        internal static string RoleAlreadyExists {
+            get {
+                return ResourceManager.GetString("RoleAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Роль не найдена.
+        /// </summary>
+        internal static string RoleNotFound {
+            get {
+                return ResourceManager.GetString("RoleNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пользователь уже существует.
+        /// </summary>
+        internal static string UserAlreadyExists {
+            get {
+                return ResourceManager.GetString("UserAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to У выбранного пользователя уже есть эта роль.
+        /// </summary>
+        internal static string UserAlreadyExistsThisRole {
+            get {
+                return ResourceManager.GetString("UserAlreadyExistsThisRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Пользователь не найден.
         /// </summary>
         internal static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не верный пароль.
+        /// </summary>
+        internal static string WrongPassword {
+            get {
+                return ResourceManager.GetString("WrongPassword", resourceCulture);
             }
         }
     }

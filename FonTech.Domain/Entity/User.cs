@@ -13,6 +13,9 @@ public class User : IEntityId<long>, IAuditable
     // у пользователя много отчётов
     public List<Report> Reports { get; set; }
     
+    public List<Role> Roles { get; set; }
+    public UserToken UserToken { get; set; }
+    
     public DateTime CreatedAt { get; set; }
     
     public long CreatedBy { get; set; }

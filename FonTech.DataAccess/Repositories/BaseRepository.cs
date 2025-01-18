@@ -3,20 +3,14 @@
 namespace FonTech.DataAccess.Repositories;
 
 
-public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
+public class BaseRepository<TEntity>(ApplicationDbContext dbContext) : IBaseRepository<TEntity>
+    where TEntity : class
 {
-    private readonly ApplicationDbContext _dbContext;
-    
-    public BaseRepository(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-    
     public IQueryable<TEntity> GetAll()
     {
         // установка какие объекты мы будем вытаскивать
         // обязательно пишем where TEntity : class
-        return _dbContext.Set<TEntity>();
+        return dbContext.Set<TEntity>();
     }
 
     
@@ -24,8 +18,8 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        await _dbContext.AddAsync(entity, ct); // Асинхронное добавление
-         await _dbContext.SaveChangesAsync(ct); // Асинхронное сохранение
+        await dbContext.AddAsync(entity, ct); 
+         await dbContext.SaveChangesAsync(ct);
 
         return entity;
     }
@@ -34,8 +28,8 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        _dbContext.Update(entity);
-         await _dbContext.SaveChangesAsync(ct);
+        dbContext.Update(entity);
+         await dbContext.SaveChangesAsync(ct);
 
         return entity;
     }
@@ -45,8 +39,8 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        _dbContext.Remove(entity);
-        await _dbContext.SaveChangesAsync(ct);
+        dbContext.Remove(entity);
+        await dbContext.SaveChangesAsync(ct);
 
         return entity;
     }

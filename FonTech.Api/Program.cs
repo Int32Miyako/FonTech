@@ -1,25 +1,37 @@
 using FonTech.Api;
+using FonTech.Api.Middlewares;
 using FonTech.Application.DependencyInjection;
 using FonTech.DataAccess.DependencyInjection;
-using Microsoft.AspNetCore.Authentication;
+using FonTech.Domain.Settings;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSection));
+    
 builder.Services.AddControllers();
+
+builder.Services.AddAuthenticationAndAuthorization(builder);
 builder.Services.AddSwagger();
 
 
 builder.Host.UseSerilog((context, configuration) => 
     configuration.ReadFrom.Configuration(context.Configuration));
 
-
-
-// Подключение дополнительных сервисов
+builder.Configuration.AddUserSecrets<Program>();
+// Подключение слоёв
 builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddApplication();
 
+
 var app = builder.Build();
+
+
+
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -32,10 +44,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-app.UseAuthentication();
-app.UseAuthorization();
+
+app.UseHttpsRedirection();
 
 app.MapControllers();
 

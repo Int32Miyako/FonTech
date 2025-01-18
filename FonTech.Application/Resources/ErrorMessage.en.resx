@@ -26,4 +26,28 @@
     <data name="UserNotFound" xml:space="preserve">
         <value>User not found</value>
     </data>
+    <data name="PasswordNotEqualsPasswordConfirm" xml:space="preserve">
+        <value>Password not equals password confirm</value>
+    </data>
+    <data name="UserAlreadyExists" xml:space="preserve">
+        <value>User already exists</value>
+    </data>
+    <data name="WrongPassword" xml:space="preserve">
+        <value>Wrong password</value>
+    </data>
+    <data name="InvalidSecurityToken" xml:space="preserve">
+        <value>Invalid security token</value>
+    </data>
+    <data name="InvalidClientRequest" xml:space="preserve">
+        <value>Invalid client request</value>
+    </data>
+    <data name="RoleAlreadyExists" xml:space="preserve">
+        <value>Role is already exists</value>
+    </data>
+    <data name="RoleNotFound" xml:space="preserve">
+        <value>RoleNotFound</value>
+    </data>
+    <data name="UserAlreadyExistsThisRole" xml:space="preserve">
+        <value>This user already have chosen role</value>
+    </data>
 </root>

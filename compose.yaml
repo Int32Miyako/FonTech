@@ -4,3 +4,20 @@
     build:
       context: .
       dockerfile: FonTech.Api/Dockerfile
+      
+      
+  postgres:
+    container_name: fontech_db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: fontech
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+        
+volumes:
+  postgres-data:
