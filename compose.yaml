@@ -4,6 +4,12 @@
     build:
       context: .
       dockerfile: FonTech.Api/Dockerfile
+    depends_on:
+        - rabbitmq
+        - postgres
+    environment:
+        RABBITMQ_HOST: rabbitmq
+        RABBITMQ_PORT: 5672
       
       
   postgres:
@@ -19,5 +25,19 @@
     volumes:
       - postgres-data:/var/lib/postgresql/data
         
+        
+  rabbitmq:
+    image: rabbitmq:4.1.0-beta.3-management-alpine
+    container_name: rabbit_mq
+    hostname: my-rabbit
+    restart: always
+    ports:
+      - "5672:5672" # порт для общения с RabbitMQ
+      - "15672:15672" # порт для административной панели
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    
+    
 volumes:
   postgres-data:

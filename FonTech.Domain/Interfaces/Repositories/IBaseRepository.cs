@@ -1,7 +1,9 @@
-﻿namespace FonTech.Domain.Interfaces.Repositories;
+﻿using FonTech.Domain.Databases;
+
+namespace FonTech.Domain.Interfaces.Repositories;
 
 // общий репозиторий
-public interface IBaseRepository<TEntity>
+public interface IBaseRepository<TEntity> : IStateSaveChanges
 {
     IQueryable<TEntity> GetAll();
 

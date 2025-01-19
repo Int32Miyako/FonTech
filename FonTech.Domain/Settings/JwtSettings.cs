@@ -3,7 +3,7 @@
 public class JwtSettings
 {
     // из какой секции тянем jwt токен в AppSettings
-    public const string DefaultSection = "Jwt";
+    public const string DefaultSection = "JwtSettings";
 
     public string Issuer { get; set; }
     public string Audience { get; set; }

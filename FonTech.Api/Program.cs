@@ -1,13 +1,21 @@
 using FonTech.Api;
 using FonTech.Api.Middlewares;
 using FonTech.Application.DependencyInjection;
+using FonTech.Consumer.DependencyInjection;
 using FonTech.DataAccess.DependencyInjection;
+using FonTech.Domain.Entity;
+using FonTech.Domain.Enum;
 using FonTech.Domain.Settings;
+using FonTech.Producer.DependencyInjection;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.DefaultSection));
+builder.Services.Configure<JwtSettings>
+    (builder.Configuration.GetSection(JwtSettings.DefaultSection));
+
+builder.Services.Configure<RabbitMqSettings>
+    (builder.Configuration.GetSection(RabbitMqSettings.DefaultSection));
     
 builder.Services.AddControllers();
 
@@ -19,21 +27,24 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Configuration.AddUserSecrets<Program>();
+
+
+
 // Подключение слоёв
-builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddApplication();
+
+builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddProducer();
+builder.Services.AddConsumer();
 
 
 var app = builder.Build();
 
 
-
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 
-
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();  
     app.UseSwaggerUI(c =>

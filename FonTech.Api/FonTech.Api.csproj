@@ -29,8 +29,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FonTech.Application\FonTech.Application.csproj" />
+      <ProjectReference Include="..\FonTech.Consumer\FonTech.Consumer.csproj" />
       <ProjectReference Include="..\FonTech.DataAccess\FonTech.DataAccess.csproj" />
       <ProjectReference Include="..\FonTech.Domain\FonTech.Domain.csproj" />
+      <ProjectReference Include="..\FonTech.Producer\FonTech.Producer.csproj" />
     </ItemGroup>
 
 </Project>

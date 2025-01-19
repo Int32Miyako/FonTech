@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
 using FonTech.Application.Resources;
+using FonTech.Domain.Databases;
 using FonTech.Domain.Dto;
 using FonTech.Domain.Dto.User;
 using FonTech.Domain.Entity;
@@ -16,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FonTech.Application.Services;
 
 public class AuthService(
+    IUnitOfWork unitOfWork,
     IBaseRepository<User> userRepository,
     IBaseRepository<Role> roleRepository,
     IBaseRepository<UserRole> userRoleRepository,
@@ -53,38 +55,53 @@ public class AuthService(
         // если все проверки прошли идём заносить данные в таблицу
         var hashUserPassword = HashPassword(dto.Password);
 
-        user = new User
+        
+        
+        // говнокодинг транзакция 
+        //TODO: здесь ошибка с сохранениями, надо убрать SaveChangesAsync из всех методов
+        // репозитория а затем добавить SaveChangesAsync в IBaseRepo и во всех сервисах
+        // реализовать уже новую логику ручками вызывая сохранение изменений
+        await using (var transaction = await unitOfWork.BeginTransactionAsync())
         {
-            Login = dto.Login,
-            Password = hashUserPassword
-        };
-
-        await userRepository.CreateAsync(user, ct);
-        
-        
-        // говнокод и здесь должна быть транзакция 
-        // мы очень тупым образом добавляем роль, по сути повторяемся
-        
-        var role = await roleRepository.GetAll()
-            .FirstOrDefaultAsync(x => x.Name == "User", ct);
-        
-        if (role == null)
-        {
-            return new BaseResult<UserDto>
+            try
             {
-                ErrorMessage = ErrorMessage.RoleNotFound,
-                ErrorCode = (int)ErrorCodes.RoleNotFound
-            };
+                user = new User
+                {
+                    Login = dto.Login,
+                    Password = hashUserPassword
+                };
+                
+                
+                await unitOfWork.Users.CreateAsync(user, ct);
+                
+                var role = await roleRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.Name == nameof(Roles.User), ct);
+
+                if (role == null)
+                {
+                    return new BaseResult<UserDto>
+                    {
+                        ErrorMessage = ErrorMessage.RoleNotFound,
+                        ErrorCode = (int)ErrorCodes.RoleNotFound
+                    };
+                }
+                
+                var userRole = new UserRole
+                {
+                    UserId = user.Id,
+                    RoleId = role.Id
+                };
+                
+                await unitOfWork.UserRoles.CreateAsync(userRole, ct);
+                await transaction.CommitAsync(ct);
+                
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(ct);
+                Console.WriteLine(ex);
+            }
         }
-        
-        var userRole = new UserRole
-        {
-            UserId = user.Id,
-            RoleId = role.Id
-        };
-        await userRoleRepository.CreateAsync(userRole, ct);
-        // закончился код полного говна
-        
         
         return new BaseResult<UserDto>
         {

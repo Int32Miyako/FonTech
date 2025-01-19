@@ -3,11 +3,14 @@ using FonTech.Application.Resources;
 using FonTech.Domain.Dto.Report;
 using FonTech.Domain.Entity;
 using FonTech.Domain.Enum;
+using FonTech.Domain.Interfaces.Producer;
 using FonTech.Domain.Interfaces.Repositories;
 using FonTech.Domain.Interfaces.Services;
 using FonTech.Domain.Interfaces.Validations;
 using FonTech.Domain.Result;
+using FonTech.Domain.Settings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace FonTech.Application.Services;
@@ -23,6 +26,8 @@ public class ReportService(
     IBaseRepository<Report> reportRepository,
     ILogger logger,
     IBaseRepository<User> userRepository,
+    IMessageProducer messageProducer,
+    IOptions<RabbitMqSettings> rabbitMqSettings,
     IReportValidator reportValidator,
     IMapper mapper)
     : IReportService
@@ -106,9 +111,17 @@ public class ReportService(
             Description = dto.Description,
             UserId = user!.Id
         };
-
         await reportRepository.CreateAsync(report, ct);
-
+        //await reportRepository.SaveChangesAsync();
+        
+        messageProducer.SendMessage(
+            report, 
+            rabbitMqSettings.Value.RoutingKey, 
+            rabbitMqSettings.Value.ExchangeName
+            );
+            
+            
+            
         return new BaseResult<ReportDto>
         {
             Data = mapper.Map<ReportDto>(report)

@@ -1,5 +1,7 @@
-﻿using FonTech.DataAccess.Interceptors;
+﻿using FonTech.DataAccess.Databases;
+using FonTech.DataAccess.Interceptors;
 using FonTech.DataAccess.Repositories;
+using FonTech.Domain.Databases;
 using FonTech.Domain.Entity;
 using FonTech.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -29,5 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IBaseRepository<UserRole>, BaseRepository<UserRole>>();
         services.AddScoped<IBaseRepository<UserToken>, BaseRepository<UserToken>>();
         services.AddScoped<IBaseRepository<Report>, BaseRepository<Report>>();
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

@@ -45,4 +45,8 @@ public class BaseRepository<TEntity>(ApplicationDbContext dbContext) : IBaseRepo
         return entity;
     }
 
+    public Task<int> SaveChangesAsync()
+    {
+        throw new NotImplementedException();
+    }
 }
