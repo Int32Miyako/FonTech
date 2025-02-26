@@ -18,7 +18,19 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasForeignKey(x => x.UserId)
             .HasPrincipalKey(x => x.Id);
 
-        
+        builder.HasData(new List<User>()
+        {
+            new User()
+            {
+                Id = 1,
+                Login = "admin",
+                Password = "password",
+                CreatedAt = DateTime.UtcNow
+            }
+        });
+        {
+            
+        }
         builder.HasMany(x => x.Roles)
             .WithMany(x => x.Users)
             .UsingEntity<UserRole>(

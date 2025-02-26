@@ -3,6 +3,7 @@ using FonTech.Application.Resources;
 using FonTech.Domain.Dto.Report;
 using FonTech.Domain.Entity;
 using FonTech.Domain.Enum;
+using FonTech.Domain.Extensions;
 using FonTech.Domain.Interfaces.Producer;
 using FonTech.Domain.Interfaces.Repositories;
 using FonTech.Domain.Interfaces.Services;
@@ -10,6 +11,7 @@ using FonTech.Domain.Interfaces.Validations;
 using FonTech.Domain.Result;
 using FonTech.Domain.Settings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Serilog;
 
@@ -24,17 +26,18 @@ namespace FonTech.Application.Services;
 /// </summary>
 public class ReportService(
     IBaseRepository<Report> reportRepository,
-    ILogger logger,
-    IBaseRepository<User> userRepository,
-    IMessageProducer messageProducer,
-    IOptions<RabbitMqSettings> rabbitMqSettings,
-    IReportValidator reportValidator,
-    IMapper mapper)
+    IBaseRepository<User>? userRepository,
+    ILogger? logger,
+    IMessageProducer? messageProducer,
+    IOptions<RabbitMqSettings>? rabbitMqSettings,
+    IReportValidator? reportValidator,
+    IMapper mapper,
+    IDistributedCache? distributedCache)
     : IReportService
 {
     
     /// <inheritdoc />
-    public async Task<CollectionResult<ReportDto>> GetReportsByUserIdAsync(long userId, CancellationToken ct)
+    public async Task<CollectionResult<ReportDto>> GetReportsByUserIdAsync(long userId, CancellationToken ct = default)
     {
         var reports = await reportRepository.GetAll()
             .Where(x => x.UserId == userId)
@@ -52,6 +55,8 @@ public class ReportService(
                 ErrorCode = (int)ErrorCodes.ReportsNotFound
             };
         }
+        
+        
 
         // не прописываем ErrorMessage!!!
         return new CollectionResult<ReportDto>
@@ -62,7 +67,7 @@ public class ReportService(
     }
 
     /// <inheritdoc />
-    public async Task<BaseResult<ReportDto>> GetReportByIdAsync(long id, CancellationToken ct)
+    public async Task<BaseResult<ReportDto>> GetReportByIdAsync(long id, CancellationToken ct = default)
     {
         // Получаем сущность из базы данных
         var reportEntity = await reportRepository.GetAll()
@@ -80,14 +85,16 @@ public class ReportService(
         }
 
         // Используем AutoMapper для преобразования
-        var report = mapper.Map<ReportDto>(reportEntity);
+        var report = mapper?.Map<ReportDto>(reportEntity);
 
+        distributedCache.SetObject($"Report_{id}", report);
+        
         return new BaseResult<ReportDto>(report);
     }
 
 
     /// <inheritdoc />
-    public async Task<BaseResult<ReportDto>> CreateReportAsync(CreateReportDto dto, CancellationToken ct)
+    public async Task<BaseResult<ReportDto>> CreateReportAsync(CreateReportDto dto, CancellationToken ct = default)
     {
         var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.UserId, ct);
 
@@ -129,7 +136,7 @@ public class ReportService(
     }
 
     /// <inheritdoc />
-    public async Task<BaseResult<ReportDto>> UpdateReportAsync(UpdateReportDto dto, CancellationToken ct)
+    public async Task<BaseResult<ReportDto>> UpdateReportAsync(UpdateReportDto dto, CancellationToken ct = default)
     {
         var report = await reportRepository.GetAll().FirstOrDefaultAsync(x => x.Id == dto.Id, ct);
         var result = reportValidator.ValidateOnNull(report);
@@ -154,7 +161,7 @@ public class ReportService(
     }
 
     /// <inheritdoc />
-    public async Task<BaseResult<ReportDto>> DeleteReportAsync(long id, CancellationToken ct)
+    public async Task<BaseResult<ReportDto>> DeleteReportAsync(long id, CancellationToken ct = default)
     {
         var report = await reportRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id, ct);
         var result = reportValidator.ValidateOnNull(report);

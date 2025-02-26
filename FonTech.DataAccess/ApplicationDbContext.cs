@@ -21,6 +21,7 @@ public sealed class ApplicationDbContext : DbContext
         
         try
         {
+            Database.EnsureDeleted();
             Database.EnsureCreated(); // дурею с этой прикормки
         }
         catch (Exception ex)

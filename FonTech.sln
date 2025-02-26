@@ -11,6 +11,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{35E35100-1764-485D-857C-F56465FA6009}"
 	ProjectSection(SolutionItems) = preProject
 		compose.yaml = compose.yaml
+		prometheus.yml = prometheus.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FonTech.Application", "FonTech.Application\FonTech.Application.csproj", "{BA4223AD-C38B-4AC0-95E4-CE21B86E82F3}"
@@ -22,6 +23,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FonTech.Producer", "FonTech.Producer\FonTech.Producer.csproj", "{D7571E3A-03F9-4830-BE5E-47752267CB14}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FonTech.Consumer", "FonTech.Consumer\FonTech.Consumer.csproj", "{AB56D4FD-398A-494A-A2E0-8EC13AA620A2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{D34B22E2-CF0A-4C0F-88E2-08D98CFDDF66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FonTech.Tests", "FonTech.Tests\FonTech.Tests.csproj", "{5E19FD2E-66A1-43D8-BBC4-D6ACA3D3FDCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +40,7 @@ Global
 		{C0A1E1A3-E749-499E-A866-CBD9A8627FF6} = {2D1C2417-790D-4427-A1D9-82C5388B75F5}
 		{D7571E3A-03F9-4830-BE5E-47752267CB14} = {2D1C2417-790D-4427-A1D9-82C5388B75F5}
 		{AB56D4FD-398A-494A-A2E0-8EC13AA620A2} = {2D1C2417-790D-4427-A1D9-82C5388B75F5}
+		{5E19FD2E-66A1-43D8-BBC4-D6ACA3D3FDCB} = {D34B22E2-CF0A-4C0F-88E2-08D98CFDDF66}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AA4353B6-4063-47B9-8CDF-F34955A44953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -61,5 +67,9 @@ Global
 		{AB56D4FD-398A-494A-A2E0-8EC13AA620A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB56D4FD-398A-494A-A2E0-8EC13AA620A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB56D4FD-398A-494A-A2E0-8EC13AA620A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E19FD2E-66A1-43D8-BBC4-D6ACA3D3FDCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E19FD2E-66A1-43D8-BBC4-D6ACA3D3FDCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E19FD2E-66A1-43D8-BBC4-D6ACA3D3FDCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E19FD2E-66A1-43D8-BBC4-D6ACA3D3FDCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

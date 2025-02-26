@@ -54,7 +54,7 @@ public class RabbitMqListener(IOptions<RabbitMqSettings> options) : BackgroundSe
                 var body = basicDeliver.Body.ToArray();
                 
                 var message = Encoding.UTF8.GetString(body);
-                Debug.WriteLine($"Получено собщение: {message}");
+                Console.WriteLine($"Получено собщение: {message}");
 
                 // Обработка сообщения -- механизм акка --
                 // подтверждение получения сообщения чтобы удалить сообщение из очереди

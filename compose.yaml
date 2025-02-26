@@ -5,16 +5,27 @@
       context: .
       dockerfile: FonTech.Api/Dockerfile
     depends_on:
-        - rabbitmq
-        - postgres
+      - rabbitmq
+      - postgres
     environment:
-        RABBITMQ_HOST: rabbitmq
-        RABBITMQ_PORT: 5672
-      
-      
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+    networks:
+      - mynw
+
+  redis:
+    container_name: fontech_redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - mynw
+    
+    
   postgres:
     container_name: fontech_db
-    image: postgres
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_DB: fontech
@@ -24,12 +35,24 @@
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-        
-        
+    networks:
+      - mynw
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.ru
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    restart: always
+    ports:
+      - "5050:80"
+    networks:
+      - mynw
+
   rabbitmq:
-    image: rabbitmq:4.1.0-beta.3-management-alpine
+    image: rabbitmq:management
     container_name: rabbit_mq
-    hostname: my-rabbit
+    hostname: rabbitmq
     restart: always
     ports:
       - "5672:5672" # порт для общения с RabbitMQ
@@ -37,7 +60,35 @@
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-    
-    
+    networks:
+      - mynw
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - mynw
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - mynw
+
+networks:
+  mynw:
+
 volumes:
   postgres-data:

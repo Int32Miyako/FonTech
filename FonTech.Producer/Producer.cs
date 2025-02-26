@@ -14,7 +14,8 @@ public class Producer : IMessageProducer
         try
         {
             // коннекшн с кроликом
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory { HostName = "localhost" };
+
             // factory.Uri = new Uri("");
         
             // канал для взаимодействия с кроликом
@@ -38,6 +39,9 @@ public class Producer : IMessageProducer
                     exchange: exchange,
                     routingKey: routingKey,
                     body: body);
+            
+            
+          
         }
         catch (Exception e)
         {
