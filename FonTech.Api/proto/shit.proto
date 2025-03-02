@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+
+message Data {
+  int32 shit = 1;
+  float ewew = 2;
+  
+}
+
+
+// protobuf по своей сути это просто протокол как например обычный json
+enum DataType {
+  shit = 0;
+  firstEnumMustBe0InProto3 = 1;
+  adsf = 2;
+}
