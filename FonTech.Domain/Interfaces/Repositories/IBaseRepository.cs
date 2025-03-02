@@ -1,9 +1,9 @@
-﻿using FonTech.Domain.Databases;
+﻿using FonTech.Domain.Interfaces.Databases;
 
 namespace FonTech.Domain.Interfaces.Repositories;
 
 // общий репозиторий
-public interface IBaseRepository<TEntity> : IStateSaveChanges
+public interface IBaseRepository<TEntity>
 {
     IQueryable<TEntity> GetAll();
 
@@ -12,4 +12,6 @@ public interface IBaseRepository<TEntity> : IStateSaveChanges
     Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct);
 
     Task<TEntity> RemoveAsync(TEntity entity, CancellationToken ct);
+    
+    Task<int> SaveChangesAsync(CancellationToken ct = default);
 }

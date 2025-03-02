@@ -19,7 +19,6 @@ public class BaseRepository<TEntity>(ApplicationDbContext dbContext) : IBaseRepo
         ArgumentNullException.ThrowIfNull(entity);
 
         await dbContext.AddAsync(entity, ct); 
-         await dbContext.SaveChangesAsync(ct);
 
         return entity;
     }
@@ -29,7 +28,6 @@ public class BaseRepository<TEntity>(ApplicationDbContext dbContext) : IBaseRepo
         ArgumentNullException.ThrowIfNull(entity);
 
         dbContext.Update(entity);
-         await dbContext.SaveChangesAsync(ct);
 
         return entity;
     }
@@ -40,13 +38,13 @@ public class BaseRepository<TEntity>(ApplicationDbContext dbContext) : IBaseRepo
         ArgumentNullException.ThrowIfNull(entity);
 
         dbContext.Remove(entity);
-        await dbContext.SaveChangesAsync(ct);
 
         return entity;
     }
 
-    public Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync(CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        return await dbContext.SaveChangesAsync(ct);
     }
+    
 }

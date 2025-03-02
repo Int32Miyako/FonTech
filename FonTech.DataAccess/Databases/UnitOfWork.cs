@@ -1,31 +1,24 @@
-﻿using FonTech.Domain.Databases;
-using FonTech.Domain.Entity;
-using FonTech.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using FonTech.Domain.Interfaces.Databases;
 
 namespace FonTech.DataAccess.Databases;
 
 public class UnitOfWork(
-    ApplicationDbContext context,
-    IBaseRepository<User> users, 
-    IBaseRepository<Role> roles,
-    IBaseRepository<UserRole> userRoles
-    ) 
-    : IUnitOfWork
+    ApplicationDbContext context
+    ) : IUnitOfWork
 {
-    public IBaseRepository<User> Users { get; set; } = users;
-    public IBaseRepository<Role> Roles { get; set; } = roles;
-    public IBaseRepository<UserRole> UserRoles { get; set; } = userRoles;
-    
-
-    public async Task<IDbContextTransaction> BeginTransactionAsync()
+    public async Task<ITransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
-        return await context.Database.BeginTransactionAsync();
+        var efTransaction = await context.Database.BeginTransactionAsync(cancellationToken);
+        return new EfTransaction(efTransaction);
     }
 
-    public async Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await context.SaveChangesAsync();
+        return await context.SaveChangesAsync(cancellationToken);
     }
-  
+
+    public void Dispose()
+    {
+        context.Dispose();
+    }
 }

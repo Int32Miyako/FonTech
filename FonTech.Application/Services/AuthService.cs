@@ -3,11 +3,11 @@ using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
 using FonTech.Application.Resources;
-using FonTech.Domain.Databases;
 using FonTech.Domain.Dto;
 using FonTech.Domain.Dto.User;
 using FonTech.Domain.Entity;
 using FonTech.Domain.Enum;
+using FonTech.Domain.Interfaces.Databases;
 using FonTech.Domain.Interfaces.Repositories;
 using FonTech.Domain.Interfaces.Services;
 using FonTech.Domain.Result;
@@ -26,7 +26,7 @@ public class AuthService(
     ITokenService tokenService)
     : IAuthService
 {
-    public async Task<BaseResult<UserDto>> RegisterAsync(RegisterUserDto dto, CancellationToken ct)
+    public async Task<BaseResult<UserDto>> RegisterAsync(RegisterUserDto dto, CancellationToken ct = default)
     {
         // проверка что пароли не совпадают
         if (dto.Password != dto.PasswordConfirm)
@@ -57,11 +57,7 @@ public class AuthService(
 
         
         
-        // говнокодинг транзакция 
-        //TODO: здесь ошибка с сохранениями, надо убрать SaveChangesAsync из всех методов
-        // репозитория а затем добавить SaveChangesAsync в IBaseRepo и во всех сервисах
-        // реализовать уже новую логику ручками вызывая сохранение изменений
-        await using (var transaction = await unitOfWork.BeginTransactionAsync())
+        await using (var transaction = await unitOfWork.BeginTransactionAsync(ct))
         {
             try
             {
@@ -72,13 +68,15 @@ public class AuthService(
                 };
                 
                 
-                await unitOfWork.Users.CreateAsync(user, ct);
+                await userRepository.CreateAsync(user, ct);
+                await userRepository.SaveChangesAsync(ct);
                 
                 var role = await roleRepository.GetAll()
                     .FirstOrDefaultAsync(x => x.Name == nameof(Roles.User), ct);
 
                 if (role == null)
                 {
+                    await transaction.RollbackAsync(ct);
                     return new BaseResult<UserDto>
                     {
                         ErrorMessage = ErrorMessage.RoleNotFound,
@@ -92,7 +90,10 @@ public class AuthService(
                     RoleId = role.Id
                 };
                 
-                await unitOfWork.UserRoles.CreateAsync(userRole, ct);
+                await userRoleRepository.CreateAsync(userRole, ct);
+                await userRoleRepository.SaveChangesAsync(ct);
+                
+                
                 await transaction.CommitAsync(ct);
                 
             }

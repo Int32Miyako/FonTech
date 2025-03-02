@@ -1,8 +1,8 @@
 ﻿using FonTech.DataAccess.Databases;
 using FonTech.DataAccess.Interceptors;
 using FonTech.DataAccess.Repositories;
-using FonTech.Domain.Databases;
 using FonTech.Domain.Entity;
+using FonTech.Domain.Interfaces.Databases;
 using FonTech.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

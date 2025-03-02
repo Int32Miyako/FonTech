@@ -1,4 +1,4 @@
-﻿namespace FonTech.Domain.Databases;
+﻿namespace FonTech.Domain.Interfaces.Databases;
 
 public interface IStateSaveChanges 
 {
